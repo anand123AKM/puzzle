@@ -17,13 +17,15 @@ window.onload = function () {
             tile.id = r.toString() + "-" + c.toString();
             tile.src = imgOrder.shift() + ".jpg";
 
-            // TOUCH/MOUSE FUNCTIONALITY
-            tile.addEventListener("touchstart", startEvent);
+            // Add both touch and mouse events
             tile.addEventListener("mousedown", startEvent);
-            tile.addEventListener("touchmove", moveEvent);
+            tile.addEventListener("touchstart", startEvent);
+
             tile.addEventListener("mousemove", moveEvent);
-            tile.addEventListener("touchend", endEvent);
+            tile.addEventListener("touchmove", moveEvent);
+
             tile.addEventListener("mouseup", endEvent);
+            tile.addEventListener("touchend", endEvent);
 
             document.getElementById("board").append(tile);
         }
@@ -39,6 +41,11 @@ function moveEvent(e) {
 }
 
 function endEvent(e) {
+    if (e.changedTouches) {
+        e.clientX = e.changedTouches[0].clientX;
+        e.clientY = e.changedTouches[0].clientY;
+    }
+
     otherTile = document.elementFromPoint(e.clientX, e.clientY);
 
     if (otherTile.tagName === "IMG") {
