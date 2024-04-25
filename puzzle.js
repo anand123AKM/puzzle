@@ -13,16 +13,16 @@ window.onload = function () {
       tile.src = "blank.png";
 
       tile.addEventListener("dragstart", dragStart);
-      tile.addEventListener("dragEnd", dragEnd);
+      tile.addEventListener("dragend", dragEnd);
       tile.addEventListener("dragover", dragOver);
       tile.addEventListener("drop", drop);
       tile.addEventListener("dragenter", dragEnter);
       tile.addEventListener("dragleave", dragLeave);
 
-      tile.addEventListener("touchstart", dragStart);
-      tile.addEventListener("touchend", dragEnd);
-      tile.addEventListener("touchmove", dragOver);
-      tile.addEventListener("touchcancel", dragLeave);
+      tile.addEventListener("touchstart", touchStart);
+      tile.addEventListener("touchend", touchEnd);
+      tile.addEventListener("touchmove", touchMove);
+      tile.addEventListener("touchcancel", touchCancel);
 
       document.getElementById("board").append(tile);
     }
@@ -45,10 +45,10 @@ window.onload = function () {
     tiles.addEventListener("dragenter", dragEnter);
     tiles.addEventListener("dragleave", dragLeave);
 
-    tiles.addEventListener("touchstart", dragStart);
-    tiles.addEventListener("touchend", dragEnd);
-    tiles.addEventListener("touchmove", dragOver);
-    tiles.addEventListener("touchcancel", dragLeave);
+    tiles.addEventListener("touchstart", touchStart);
+    tiles.addEventListener("touchend", touchEnd);
+    tiles.addEventListener("touchmove", touchMove);
+    tiles.addEventListener("touchcancel", touchCancel);
 
     document.getElementById("pieces").append(tiles);
   }
@@ -84,5 +84,23 @@ function dragEnter(e) {
 }
 
 function dragLeave(e) {
+  e.preventDefault();
+}
+
+function touchStart(e) {
+  currTile = this;
+  e.preventDefault();
+}
+
+function touchEnd(e) {
+  currTile = null;
+  e.preventDefault();
+}
+
+function touchMove(e) {
+  e.preventDefault();
+}
+
+function touchCancel(e) {
   e.preventDefault();
 }
