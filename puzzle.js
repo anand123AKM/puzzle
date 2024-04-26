@@ -1,106 +1,82 @@
 var rows = 3;
 var columns = 3;
+
 var currTile;
-var otherTile;
+var otherTile; //blank tile
+
 var turns = 0;
+
+// var imgOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 var imgOrder = ["4", "2", "8", "5", "1", "6", "7", "9", "3"];
-imgOrder.reverse();
 
 window.onload = function () {
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < columns; c++) {
-      let tile = document.createElement("img");
-      tile.src = "blank.png";
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            //<img id="0-0" src="1.jpg">
+            let tile = document.createElement("img");
+            tile.id = r.toString() + "-" + c.toString();
+            tile.src = imgOrder.shift() + ".jpg";
 
-      tile.addEventListener("dragstart", dragStart);
-      tile.addEventListener("dragend", dragEnd);
-      tile.addEventListener("dragover", dragOver);
-      tile.addEventListener("drop", drop);
-      tile.addEventListener("dragenter", dragEnter);
-      tile.addEventListener("dragleave", dragLeave);
+            // Add both touch and mouse events
+            tile.addEventListener("mousedown", startEvent);
+            tile.addEventListener("touchstart", startEvent);
 
-      tile.addEventListener("touchstart", touchStart);
-      tile.addEventListener("touchend", touchEnd);
-      tile.addEventListener("touchmove", touchMove);
-      tile.addEventListener("touchcancel", touchCancel);
+            tile.addEventListener("mousemove", moveEvent);
+            tile.addEventListener("touchmove", moveEvent);
 
-      document.getElementById("board").append(tile);
+            tile.addEventListener("mouseup", endEvent);
+            tile.addEventListener("touchend", endEvent);
+
+            document.getElementById("board").append(tile);
+        }
     }
-  }
-  for (let a = 0; a < imgOrder.length; a++) {
-    let x = Math.floor(Math.random() * imgOrder.length);
-    let temp = imgOrder[a];
-    imgOrder[a] = imgOrder[x];
-    imgOrder[x] = temp;
-  }
-
-  for (let a = 0; a < imgOrder.length; a++) {
-    let tiles = document.createElement("img");
-    tiles.src = imgOrder[a] + ".jpg";
-
-    tiles.addEventListener("dragstart", dragStart);
-    tiles.addEventListener("dragend", dragEnd);
-    tiles.addEventListener("dragover", dragOver);
-    tiles.addEventListener("drop", drop);
-    tiles.addEventListener("dragenter", dragEnter);
-    tiles.addEventListener("dragleave", dragLeave);
-
-    tiles.addEventListener("touchstart", touchStart);
-    tiles.addEventListener("touchend", touchEnd);
-    tiles.addEventListener("touchmove", touchMove);
-    tiles.addEventListener("touchcancel", touchCancel);
-
-    document.getElementById("pieces").append(tiles);
-  }
-};
-
-function dragStart() {
-  currTile = this;
 }
 
-function dragEnd() {
-  currTile = null;
+function startEvent(e) {
+    currTile = this; // this refers to the img tile being touched or clicked
 }
 
-function dragOver(e) {
-  e.preventDefault();
+function moveEvent(e) {
+    e.preventDefault(); // prevent scrolling
 }
 
-function drop() {
-  otherTile = this;
-  if (currTile.src.includes("blank.png")) {
-    return;
-  }
-  if (otherTile.src.includes("blank.png")) {
-    otherTile.src = currTile.src;
-    currTile.src = "blank.png";
-    turns += 1;
-    document.getElementById("turns").innerText = turns;
-  }
-}
+function endEvent(e) {
+    if (e.changedTouches) {
+        e.clientX = e.changedTouches[0].clientX;
+        e.clientY = e.changedTouches[0].clientY;
+    }
 
-function dragEnter(e) {
-  e.preventDefault();
-}
+    otherTile = document.elementFromPoint(e.clientX, e.clientY);
 
-function dragLeave(e) {
-  e.preventDefault();
-}
+    if (otherTile.tagName === "IMG") {
+        if (!otherTile.src.includes("3.jpg")) {
+            return;
+        }
 
-function touchStart(e) {
-  currTile = this;
-  e.preventDefault();
-}
+        let currCoords = currTile.id.split("-");
+        let r = parseInt(currCoords[0]);
+        let c = parseInt(currCoords[1]);
 
-function touchEnd(e) {
-  currTile = null;
-  e.preventDefault();
-}
+        let otherCoords = otherTile.id.split("-");
+        let r2 = parseInt(otherCoords[0]);
+        let c2 = parseInt(otherCoords[1]);
 
-function touchMove(e) {
-  e.preventDefault();
-}
+        let moveLeft = r == r2 && c2 == c - 1;
+        let moveRight = r == r2 && c2 == c + 1;
+        let moveUp = c == c2 && r2 == r - 1;
+        let moveDown = c == c2 && r2 == r + 1;
 
-function touchCancel(e) {
-  e.preventDefault();
+        let isAdjacent = moveLeft || moveRight || moveUp || moveDown;
+
+        if (isAdjacent) {
+            let currImg = currTile.src;
+            let otherImg = otherTile.src;
+
+            currTile.src = otherImg;
+            otherTile.src = currImg;
+
+            turns += 1;
+            document.getElementById("turns").innerText = turns;
+        }
+    }
 }
