@@ -23,31 +23,5 @@ body {
 #board img {
     width: 118px;
     height: 118px;
-    border: 1px solid #060d12;
-}
-
-#pieces{
-    width: 804px;
-    height: 99px;
-   
-    
-        margin: 0 auto;
-        display: flex;
-        flex-wrap: wrap;
-    }
-#pieces img {
-    width: 88px;
-    height: 98px;
-    border: 1px solid #060d12;
-}
-@media screen and (max-width: 660px) {
-    #pieces {
-            width: 358px;
-            height: 99px;
-          
-    
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-        }
+    border: 1px solid #0c67ae;
 }
