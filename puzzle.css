@@ -29,7 +29,7 @@ body {
 #pieces{
     width: 804px;
     height: 99px;
-    border: 4px solid #0c67ae;
+   
     
         margin: 0 auto;
         display: flex;
@@ -39,4 +39,15 @@ body {
     width: 88px;
     height: 98px;
     border: 1px solid #060d12;
+}
+@media screen and (max-width: 660px) {
+    #pieces {
+            width: 358px;
+            height: 99px;
+          
+    
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
 }
